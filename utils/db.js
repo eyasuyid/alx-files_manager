@@ -1,7 +1,5 @@
 import { MongoClient } from 'mongodb';
 
-require('dotenv').config();
-
 class DBClient {
   constructor() {
     this.host = process.env.DB_HOST || 'localhost';
@@ -34,4 +32,6 @@ class DBClient {
   }
 }
 
-export default new DBClient();
+const dbClient = new DBClient();
+
+export default dbClient;
