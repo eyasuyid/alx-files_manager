@@ -1,7 +1,7 @@
 import sha1 from 'sha1';
 import db from '../utils/db';
 
-export const postNew = async (req, res) => {
+const postNew = async (req, res) => {
   const { email, password } = req.body;
   let error = '';
   if (email == null) {
