@@ -48,4 +48,4 @@ const getDisconnect = async (req, res) => {
   return res.status(204).end();
 };
 
-export { getConnect, getDisconnect };
+module.exports = { getConnect, getDisconnect };
