@@ -8,6 +8,7 @@ class DBClient {
 
     MongoClient.connect(new Server(host, port))
       .then((client) => {
+        this.client = client;
         this.db = client.db(database);
         this.users = this.db.collection('users');
         this.files = this.db.collection('files');
@@ -15,7 +16,7 @@ class DBClient {
   }
 
   isAlive() {
-    return !!this.db;
+    return !! this.db;
   }
 
   async nbUsers() {
@@ -27,4 +28,4 @@ class DBClient {
   }
 }
 const dbClient = new DBClient();
-export default dbClient;
+module.exports = dbClient;
