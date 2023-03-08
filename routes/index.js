@@ -18,7 +18,7 @@ router.get('/disconnect', getDisconnect);
 
 router.get('/users/me', getMe);
 
-router.post('/files', postUpload);
+router.post('/files', FilesController.postUpload);
 
 router.get('/files/:id', FilesController.getShow);
 
