@@ -1,51 +1,37 @@
 import sha1 from 'sha1';
-import { v4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import redisClient from '../utils/redis';
 import db from '../utils/db';
 
 const getConnect = async (req, res) => {
-  const error = 'Unauthorized';
-  if (req.headers.authorization == null) {
-    return res.status(401).send({ error });
-  }
+  if (!req.headers.authorization) return res.status(401).send({ error: 'Unauthorized' });
 
-  const authHeader = req.headers.authorization.split(' ')[1];
-  const auth = Buffer.from(authHeader, 'base64').toString('ascii');
-  const [email, password] = auth.split(':');
+  const authPayload = req.headers.authorization.split(' ')[1];
+  const decodedAuthPayload = Buffer.from(authPayload, 'base64').toString('ascii');
+  const [email, clearPwd] = decodedAuthPayload.split(':');
 
   const user = await db.users.findOne({ email });
-  const hash = sha1(password);
+  if (!user || sha1(clearPwd) !== user.password) return res.status(401).send({ error: 'Unauthorized' });
 
-  if (user == null || hash !== user.password) {
-    return res.status(401).send({ error });
-  }
+  const authToken = uuidv4();
+  const redisKey = `auth_${authToken}`;
 
-  const token = v4();
-  const key = `auth_${token}`;
-  const id = user._id.toString();
+  redisClient.set(redisKey, user._id.toString(), 86400);
 
-  redisClient.set(key, id, 86400);
-
-  return res.status(200).send({ token });
+  return res.status(200).send({ token: authToken });
 };
 
 const getDisconnect = async (req, res) => {
-  const error = 'Unauthorized';
-  const token = req.headers['x-token'];
-  if (token == null) {
-    return res.status(401).send({ error });
-  }
+  if (!req.headers['x-token']) return res.status(401).send({ error: 'Unauthorized' });
 
-  const key = `auth_${token}`;
-  const id = await redisClient.get(key);
+  const redisKey = `auth_${req.headers['x-token']}`;
+  const userId = await redisClient.get(redisKey);
 
-  if (id == null) {
-    return res.status(401).send({ error });
-  }
+  if (!userId) return res.status(401).send({ error: 'Unauthorized' });
 
-  await redisClient.del(key);
+  await redisClient.del(redisKey);
 
   return res.status(204).end();
 };
 
-module.exports = { getConnect, getDisconnect };
+export { getConnect, getDisconnect };
