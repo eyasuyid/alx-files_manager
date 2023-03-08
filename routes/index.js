@@ -2,7 +2,7 @@ import express from 'express';
 import { getStatus, getStats } from '../controllers/AppController';
 import { postNew, getMe } from '../controllers/UsersController';
 import { getConnect, getDisconnect } from '../controllers/AuthController';
-import { postUpload } from '../controllers/FilesController';
+import  FilesController from '../controllers/FilesController';
 
 const router = express.Router();
 
@@ -19,5 +19,15 @@ router.get('/disconnect', getDisconnect);
 router.get('/users/me', getMe);
 
 router.post('/files', postUpload);
+
+router.get('/files/:id', FilesController.getShow);
+
+router.get('/files', FilesController.getIndex);
+
+router.get('/files/:id/data', FilesController.getFile);
+
+router.put('/files/:id/publish', FilesController.putPublish);
+
+router.put('/files/:id/unpublish', FilesController.putUnpublish);
 
 export default router;
