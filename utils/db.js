@@ -26,5 +26,5 @@ class DBClient {
     return this.files.countDocuments();
   }
 }
-
-export default new DBClient();
+const dbClient = new DBClient();
+export default dbClient;
