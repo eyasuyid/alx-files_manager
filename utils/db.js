@@ -15,7 +15,7 @@ class DBClient {
   }
 
   isAlive() {
-    return this.db.isConnected();
+    return !!this.db;
   }
 
   async nbUsers() {
