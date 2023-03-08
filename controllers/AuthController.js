@@ -4,10 +4,14 @@ import redisClient from '../utils/redis';
 import db from '../utils/db';
 
 const getConnect = async (req, res) => {
+  const error = 'Unauthorized';
+  if (req.headers.authorization == null) {
+    return res.status(401).send({ error });
+  }
+
   const authHeader = req.headers.authorization.split(' ')[1];
   const auth = Buffer.from(authHeader, 'base64').toString('ascii');
   const [email, password] = auth.split(':');
-  const error = 'Unauthorized';
 
   const user = await db.users.findOne({ email });
   const hashPassword = sha1(password);
@@ -35,7 +39,7 @@ const getDisconnect = async (req, res) => {
     return res.status(401).send({ error });
   }
   redisClient.del(key);
-  return res.status(204).send();
+  return res.status(204).end();
 };
 
 export { getConnect, getDisconnect };
