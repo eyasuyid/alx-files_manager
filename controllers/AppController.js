@@ -10,9 +10,9 @@ const getStatus = (req, res) => {
   });
 };
 
-const getStats = (req, res) => {
-  const users = DBClient.nbUsers();
-  const files = DBClient.nbFiles();
+const getStats = async (req, res) => {
+  const users = await DBClient.nbUsers();
+  const files = await DBClient.nbFiles();
   res.send({
     users,
     files,
