@@ -1,11 +1,9 @@
 import { MongoClient } from 'mongodb';
-
-import dotenv from 'dotenv';
-
-dotenv.config();
+import fsloader from './floader';
 
 class DBClient {
   constructor() {
+    fsloader();
     this.host = process.env.DB_HOST || 'localhost';
     this.port = process.env.DB_PORT || 27017;
     this.database = process.env.DB_DATABASE || 'file_manager';
