@@ -1,7 +1,7 @@
-import express, { Router } from 'express';
-import {getStatus, getStats} from '../controllers/AppController'
+import { Router } from 'express';
+import { getStatus, getStats } from '../controllers/AppController';
 
-const router = express.Router();;
+const router = Router();
 
 router.get('/status', getStatus);
 
