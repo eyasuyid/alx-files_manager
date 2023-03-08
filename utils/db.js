@@ -11,7 +11,7 @@ class DBClient {
         this.db = client.db(database);
         this.users = this.db.collection('users');
         this.files = this.db.collection('files');
-      })
+      });
   }
 
   isAlive() {
@@ -27,4 +27,4 @@ class DBClient {
   }
 }
 
-export default new DBClient();;
+export default new DBClient();

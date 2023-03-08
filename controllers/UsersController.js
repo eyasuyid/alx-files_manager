@@ -1,5 +1,5 @@
-import db from '../utils/db';
 import sha1 from 'sha1';
+import db from '../utils/db';
 
 const postNew = async (req, res) => {
   const { email, password } = req.body;
@@ -14,14 +14,13 @@ const postNew = async (req, res) => {
     res.status(400).send({ error });
     return;
   }
-  if (await db.users.findOne({email}) != null) {
+  if (await db.users.findOne({ email }) != null) {
     error = 'Already exist';
     res.status(400).send({ error });
     return;
   }
-  const { _id } = (await db.users.insertOne({email, password: sha1(password)})).ops[0];
-  res.status(201).send({ id: _id, email })
+  const { _id } = (await db.users.insertOne({ email, password: sha1(password) })).ops[0];
+  res.status(201).send({ id: _id, email });
 };
 
-
-export { postNew }
+export default postNew;
